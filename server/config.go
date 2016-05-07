@@ -77,4 +77,5 @@ type TLSConfig struct {
 	PreferServerCipherSuites bool
 	ClientCerts              []string
 	ClientAuth               tls.ClientAuthType
+	CurvePreferences         []tls.CurveID
 }

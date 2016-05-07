@@ -186,6 +186,16 @@ func TestSetupParseWithWrongOptionalParams(t *testing.T) {
 	if err == nil {
 		t.Errorf("Expected errors, but no error returned")
 	}
+
+	// Test curve wrong params
+	params = `tls {
+			curve ab123, cd456
+		}`
+	c = setup.NewTestController(params)
+	_, err = Setup(c)
+	if err == nil {
+		t.Errorf("Expected errors, but no error returned")
+	}
 }
 
 func TestSetupParseWithClientAuth(t *testing.T) {
@@ -267,6 +277,22 @@ func TestSetupParseWithKeyType(t *testing.T) {
 
 	if KeyType != acme.EC384 {
 		t.Errorf("Expected 'P384' as KeyType, got %#v", KeyType)
+	}
+}
+
+func TestSetupParseWithCurve(t *testing.T) {
+	params := `tls {
+            curve p256 p384 p521
+        }`
+	c := setup.NewTestController(params)
+
+	_, err := Setup(c)
+	if err != nil {
+		t.Errorf("Expected no errors, got: %v", err)
+	}
+
+	if len(c.TLS.CurvePreferences) != 3 {
+		t.Errorf("Expected 3 curves, got %v", len(c.TLS.CurvePreferences))
 	}
 }
 

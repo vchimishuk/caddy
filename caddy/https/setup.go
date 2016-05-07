@@ -82,6 +82,14 @@ func Setup(c *setup.Controller) (middleware.Middleware, error) {
 					}
 					c.TLS.Ciphers = append(c.TLS.Ciphers, value)
 				}
+			case "curve":
+				for c.NextArg() {
+					value, ok := supportedCurvesMap[strings.ToUpper(c.Val())]
+					if !ok {
+						return nil, c.Errf("Wrong curve name or curve not supported '%s'", c.Val())
+					}
+					c.TLS.CurvePreferences = append(c.TLS.CurvePreferences, value)
+				}
 			case "clients":
 				clientCertList := c.RemainingArgs()
 				if len(clientCertList) == 0 {
@@ -352,4 +360,11 @@ var defaultCiphers = []uint16{
 	tls.TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA,
 	tls.TLS_RSA_WITH_AES_256_CBC_SHA,
 	tls.TLS_RSA_WITH_AES_128_CBC_SHA,
+}
+
+// Map of supported curves
+var supportedCurvesMap = map[string]tls.CurveID{
+	"P256": tls.CurveP256,
+	"P384": tls.CurveP384,
+	"P521": tls.CurveP521,
 }
