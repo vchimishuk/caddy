@@ -82,7 +82,7 @@ func Setup(c *setup.Controller) (middleware.Middleware, error) {
 					}
 					c.TLS.Ciphers = append(c.TLS.Ciphers, value)
 				}
-			case "curve":
+			case "curves":
 				for c.NextArg() {
 					value, ok := supportedCurvesMap[strings.ToUpper(c.Val())]
 					if !ok {

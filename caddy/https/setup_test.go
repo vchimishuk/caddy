@@ -189,7 +189,7 @@ func TestSetupParseWithWrongOptionalParams(t *testing.T) {
 
 	// Test curve wrong params
 	params = `tls {
-			curve ab123, cd456
+			curves ab123, cd456
 		}`
 	c = setup.NewTestController(params)
 	_, err = Setup(c)
@@ -282,7 +282,7 @@ func TestSetupParseWithKeyType(t *testing.T) {
 
 func TestSetupParseWithCurve(t *testing.T) {
 	params := `tls {
-            curve p256 p384 p521
+            curves p256 p384 p521
         }`
 	c := setup.NewTestController(params)
 
