@@ -41,7 +41,10 @@ func (rw Rewrite) ServeHTTP(w http.ResponseWriter, r *http.Request) (int, error)
 		case RewriteStatus:
 			// only valid for complex rules.
 			if cRule, ok := rule.(*ComplexRule); ok && cRule.Status != 0 {
-				return cRule.Status, nil
+				code := cRule.Status
+				body := fmt.Sprintf("%d %s\n", code, http.StatusText(code))
+				httpserver.WriteTextResponse(w, code, body)
+				return 0, nil
 			}
 		}
 	}

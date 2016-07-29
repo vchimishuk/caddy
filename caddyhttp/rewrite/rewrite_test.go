@@ -139,19 +139,17 @@ func TestRewrite(t *testing.T) {
 
 		rec := httptest.NewRecorder()
 		code, err := rw.ServeHTTP(rec, req)
-		if err != nil {
-			t.Fatalf("Test %d: No error expected for handler but found %v", i, err)
+		if code != 0 || err != nil {
+			t.Fatalf("Test %d: No error expected for handler but found %d:%v", i, code, err)
 		}
 		if s.statusExpected {
-			if rec.Body.String() != "" {
-				t.Errorf("Test %d: Expected empty body but found %s", i, rec.Body.String())
+			expBody := fmt.Sprintf("%d %s\n", s.status, http.StatusText(s.status))
+
+			if rec.Body.String() != expBody {
+				t.Errorf("Test %d: Expected '%s' body but found '%s'", i, expBody, rec.Body.String())
 			}
-			if code != s.status {
-				t.Errorf("Test %d: Expected status code %d found %d", i, s.status, code)
-			}
-		} else {
-			if code != 0 {
-				t.Errorf("Test %d: Expected no status code found %d", i, code)
+			if rec.Code != s.status {
+				t.Errorf("Test %d: Expected status code %d found %d", i, s.status, rec.Code)
 			}
 		}
 	}
